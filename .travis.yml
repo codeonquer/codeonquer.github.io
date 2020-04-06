@@ -7,12 +7,12 @@ script:
   - npm run build
 branches:
   only:
-    - master
-deploy:
-  provider: pages
-  skip_cleanup: true
-  local_dir: docs/.vuepress/dist
-  github_token: $GITHUB_TOKEN
-  keep_history: true
-  on:
-    branch: master
+    - docs
+after_success:
+  - cd docs/.vuepress/dist
+  - git init
+  - git config --global user.name "${USER_NAME}"
+  - git config --global user.email "${USER_EMAIL}"
+  - git add -A
+  - git commit -m 'deploy'
+  - git push --quiet --force "https://${GITHUB_TOKEN}@${GITHUB_REF}" master:${GITHUB_BRANCH}
